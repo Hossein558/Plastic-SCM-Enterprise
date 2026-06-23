@@ -1,0 +1,32 @@
+name: Plastic SCM Windows Setup - Phase 1
+
+# این اکشن زمانی اجرا می‌شود که کدی روی شاخه اصلی پوش شود
+# یا اینکه به صورت دستی از تب Actions آن را اجرا کنید
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch: 
+
+jobs:
+  setup-and-test:
+    # درخواست یک ماشین مجازی با ویندوز سرور 2022
+    runs-on: windows-2022
+
+    steps:
+      - name: Checkout Repository
+        # این مرحله تمام فایل‌های ریپوی شما (از جمله dll و lic) را 
+        # به داخل ماشین مجازی ویندوز منتقل می‌کند
+        uses: actions/checkout@v4
+
+      - name: Verify Windows Server Version
+        # اجرای یک دستور پاورشل برای تایید مشخصات ویندوز
+        run: |
+          Write-Host "Checking OS details..." -ForegroundColor Cyan
+          systeminfo | Select-String "OS Name", "OS Version"
+          Write-Host "Windows Server 2022 environment is ready for Plastic SCM installation." -ForegroundColor Green
+          
+      - name: Check uploaded files
+        # بررسی اینکه آیا فایل‌های لایسنس و dll به درستی وارد سرور شده‌اند یا خیر
+        run: |
+          Write-Host "Listing files in the current directory:" -ForegroundColor Yellow
+          Get-ChildItem
