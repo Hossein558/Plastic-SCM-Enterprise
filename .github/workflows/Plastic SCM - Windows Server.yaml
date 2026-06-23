@@ -1,10 +1,12 @@
 name: Plastic SCM Windows Setup - Phase 1
 
-# این اکشن زمانی اجرا می‌شود که کدی روی شاخه اصلی پوش شود
-# یا اینکه به صورت دستی از تب Actions آن را اجرا کنید
+# تریگرهای پوش و پول‌ریکوئست فعلاً غیرفعال (کامنت) شده‌اند
+# اجرای اکشن فقط به صورت دستی (workflow_dispatch) امکان‌پذیر است
 on:
-  push:
-    branches: [ "main", "master" ]
+  # push:
+  #   branches: [ "main", "master" ]
+  # pull_request:
+  #   branches: [ "main", "master" ]
   workflow_dispatch: 
 
 jobs:
