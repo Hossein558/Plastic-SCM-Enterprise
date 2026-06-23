@@ -1,7 +1,5 @@
-name: Plastic SCM Windows Setup - Phase 1
+name: Plastic SCM Windows Setup - Phase 2
 
-# تریگرهای پوش و پول‌ریکوئست فعلاً غیرفعال (کامنت) شده‌اند
-# اجرای اکشن فقط به صورت دستی (workflow_dispatch) امکان‌پذیر است
 on:
   # push:
   #   branches: [ "main", "master" ]
@@ -11,24 +9,27 @@ on:
 
 jobs:
   setup-and-test:
-    # درخواست یک ماشین مجازی با ویندوز سرور 2022
     runs-on: windows-2022
 
     steps:
       - name: Checkout Repository
-        # این مرحله تمام فایل‌های ریپوی شما (از جمله dll و lic) را 
-        # به داخل ماشین مجازی ویندوز منتقل می‌کند
         uses: actions/checkout@v4
 
       - name: Verify Windows Server Version
-        # اجرای یک دستور پاورشل برای تایید مشخصات ویندوز
         run: |
           Write-Host "Checking OS details..." -ForegroundColor Cyan
           systeminfo | Select-String "OS Name", "OS Version"
-          Write-Host "Windows Server 2022 environment is ready for Plastic SCM installation." -ForegroundColor Green
+          Write-Host "Windows Server 2022 environment is ready." -ForegroundColor Green
           
-      - name: Check uploaded files
-        # بررسی اینکه آیا فایل‌های لایسنس و dll به درستی وارد سرور شده‌اند یا خیر
+      - name: Download Plastic SCM Installer
         run: |
-          Write-Host "Listing files in the current directory:" -ForegroundColor Yellow
+          $installerUrl = "https://d26z97tczqnlef.cloudfront.net/releases/11.0.16.10042/plasticscm/windows/unity-vcs-on-prem-full-11.0.16.10042-win.exe"
+          $outputFile = "unity-vcs-installer.exe"
+          Write-Host "Downloading Unity VCS (Plastic SCM) Installer..." -ForegroundColor Yellow
+          Invoke-WebRequest -Uri $installerUrl -OutFile $outputFile
+          Write-Host "Download completed successfully!" -ForegroundColor Green
+
+      - name: Verify All Files
+        run: |
+          Write-Host "Listing files in the current directory:" -ForegroundColor Cyan
           Get-ChildItem
